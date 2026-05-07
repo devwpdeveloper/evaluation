@@ -10,6 +10,7 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
+        <h1>zaheer abbas</h1>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LandingPage initialAuthMode="login" />} />
         <Route path="/signup" element={<LandingPage initialAuthMode="signup" />} />
