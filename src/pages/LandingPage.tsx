@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties, TransitionEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthForm } from '../components/auth/AuthForm'
 import { useAuth } from '../context/useAuth'
@@ -9,6 +10,8 @@ type AuthMode = 'login' | 'signup'
 
 type Product = {
   badge: string
+  badgeBg: string
+  badgeColor: string
   name: string
   description: string
   price: string
@@ -20,6 +23,20 @@ type Product = {
 type FooterGroup = {
   title: string
   items: string[]
+}
+
+type Testimonial = {
+  quote: string
+  source: string
+  name: string
+}
+
+type TickerIconName = 'bolt' | 'flame' | 'target' | 'gauge'
+
+type TickerMark = {
+  label: string
+  icon: TickerIconName
+  outline?: boolean
 }
 
 const navItems = [
@@ -35,40 +52,55 @@ const navItems = [
 const products: Product[] = [
   {
     badge: 'Regular Strength',
+    badgeBg: 'rgba(209,54,21,0.1)',
+    badgeColor: '#d13615',
     name: 'Orange Flavor',
     description: 'Lorem ipsum dolor sit amet, etetur adipiscing elit.',
     price: '$32.99',
     image: 'hero-bottle-full.png',
-    imageClass: 'max-h-[292px]',
+    imageClass: 'h-[244px]',
     accent: '#f89821',
   },
   {
     badge: 'Gamer Shots',
+    badgeBg: 'rgba(129,59,110,0.1)',
+    badgeColor: '#813b6e',
     name: 'Rocket Raspberry',
     description: 'Lorem ipsum dolor sit amet, etetur adipiscing elit.',
     price: '$58.96',
     image: 'product-rocket-full.png',
-    imageClass: 'max-h-[292px]',
+    imageClass: 'h-[245px]',
     accent: '#cc2fb8',
   },
   {
     badge: 'Energy Drinks',
+    badgeBg: 'rgba(231,20,44,0.1)',
+    badgeColor: '#e7142c',
     name: 'Berry Punch Flavor',
     description: 'Lorem ipsum dolor sit amet, etetur adipiscing elit.',
     price: '$58.96',
     image: 'product-berry.png',
-    imageClass: 'max-h-[305px]',
+    imageClass: 'h-[260px]',
     accent: '#e84545',
   },
   {
     badge: 'Extra Strength',
+    badgeBg: 'rgba(27,134,66,0.1)',
+    badgeColor: '#1b8642',
     name: 'Fan Fuel',
     description: 'Lorem ipsum dolor sit amet, etetur adipiscing elit.',
     price: '$58.96',
     image: 'product-fan.png',
-    imageClass: 'max-h-[292px]',
+    imageClass: 'h-[256px]',
     accent: '#3178c6',
   },
+]
+
+const featuredFrames = [
+  { src: 'featured-step-1.png', alt: 'Featured product stage one' },
+  { src: 'featured-step-2.png', alt: 'Featured product stage two' },
+  { src: 'featured-step-3.png', alt: 'Featured product stage three' },
+  { src: 'featured-step-4.png', alt: 'Featured product stage four' },
 ]
 
 const faqItems = [
@@ -96,6 +128,29 @@ const faqItems = [
     question: 'How do you test the software?',
     answer:
       'Core verification includes build checks, lint checks, route testing, form validation testing, and browser review across responsive widths.',
+  },
+]
+
+const testimonials: Testimonial[] = [
+  {
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    source: 'Wellness Wonderland',
+    name: 'Anna Perkins',
+  },
+  {
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    source: 'Wellness Wonderland',
+    name: 'Anna Perkins',
+  },
+  {
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    source: 'Wellness Wonderland',
+    name: 'Anna Perkins',
+  },
+  {
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    source: 'Wellness Wonderland',
+    name: 'Anna Perkins',
   },
 ]
 
@@ -186,19 +241,19 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
     <div className="rounded-[12px] border border-black/10 bg-white p-3 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)]">
       {user ? (
         <>
-          <Link className="block rounded-lg px-3 py-2 text-[16px] font-semibold text-[#4c4c4c] hover:bg-[#f5f5f5] hover:text-[#e0d000]" to="/dashboard">
+          <Link className="header-dropdown-link" to="/dashboard">
             Dashboard
           </Link>
-          <button className="block w-full rounded-lg px-3 py-2 text-left text-[16px] font-semibold text-[#4c4c4c] hover:bg-[#f5f5f5] hover:text-[#e0d000]" onClick={logout} type="button">
+          <button className="header-dropdown-link w-full" onClick={logout} type="button">
             Logout
           </button>
         </>
       ) : (
         <>
-          <button className="block w-full rounded-lg px-3 py-2 text-left text-[16px] font-semibold text-[#4c4c4c] hover:bg-[#f5f5f5] hover:text-[#e0d000]" onClick={() => openAuth('login')} type="button">
+          <button className="header-dropdown-link w-full" onClick={() => openAuth('login')} type="button">
             Login
           </button>
-          <button className="block w-full rounded-lg px-3 py-2 text-left text-[16px] font-semibold text-[#4c4c4c] hover:bg-[#f5f5f5] hover:text-[#e0d000]" onClick={() => openAuth('signup')} type="button">
+          <button className="header-dropdown-link w-full" onClick={() => openAuth('signup')} type="button">
             Sign up
           </button>
         </>
@@ -211,7 +266,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
   return (
     <header className="absolute left-5 right-5 top-5 z-40 max-w-[1760px] lg:left-20 lg:right-20 2xl:left-1/2 2xl:right-auto 2xl:w-[calc(100%-160px)] 2xl:-translate-x-1/2">
       <div className="relative flex h-[56px] items-center justify-between rounded-[12px] bg-white px-4 shadow-[0_18px_50px_rgba(0,0,0,0.18)] xl:h-[64px] xl:px-5">
-        <a aria-label="5-hour ENERGY home" className="shrink-0" href="#">
+        <a aria-label="5-hour ENERGY home" className="shrink-0 rounded-lg p-1 transition hover:bg-[#fff000]/25 focus-visible:bg-[#fff000]/25 focus-visible:outline-none" href="#">
           <img alt="5-hour ENERGY" className="aspect-[115/67.44] w-[68px] object-contain sm:w-[76px] xl:w-[88px]" src={asset('logo.svg')} />
         </a>
 
@@ -227,7 +282,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
                 {item.dropdownItems ? (
                   <button
                     aria-expanded={openDropdown === item.label}
-                    className={`flex items-center gap-3 whitespace-nowrap transition hover:text-[#e0d000] ${openDropdown === item.label ? 'text-[#e0d000]' : ''}`}
+                    className={`header-menu-link ${openDropdown === item.label ? 'is-active' : ''}`}
                     onClick={() => setOpenDropdown((current) => (current === item.label ? '' : item.label))}
                     type="button"
                   >
@@ -235,7 +290,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
                     <ChevronDownIcon />
                   </button>
                 ) : (
-                  <a className="flex items-center gap-3 whitespace-nowrap transition hover:text-[#e0d000]" href="#">
+                  <a className="header-menu-link" href="#">
                     {item.label}
                   </a>
                 )}
@@ -243,7 +298,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
                   <div className="absolute left-0 top-full z-50 w-[210px] pt-3">
                     <div className="rounded-[12px] border border-black/10 bg-white p-3 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
                       {item.dropdownItems.map((dropdownItem) => (
-                        <a className="block rounded-lg px-3 py-2 text-left text-[15px] font-semibold text-[#4c4c4c] hover:bg-[#f5f5f5] hover:text-[#e0d000]" href="#" key={dropdownItem}>
+                        <a className="header-dropdown-link text-[15px]" href="#" key={dropdownItem}>
                           {dropdownItem}
                         </a>
                       ))}
@@ -258,7 +313,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
               <button
                 aria-expanded={accountOpen}
                 aria-label="Open account menu"
-                className={`grid size-6 place-items-center transition hover:text-[#e0d000] ${accountOpen ? 'text-[#e0d000]' : ''}`}
+                className={`header-icon-button size-6 ${accountOpen ? 'is-active' : ''}`}
                 onFocus={() => setAccountOpen(true)}
                 type="button"
               >
@@ -266,10 +321,10 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
               </button>
               {accountMenu}
             </div>
-            <a aria-label="Cart" className="grid size-6 place-items-center transition hover:text-[#e0d000]" href="#">
+            <a aria-label="Cart" className="header-icon-button size-6" href="#">
               <BagIcon />
             </a>
-            <button aria-label="Search" className="grid size-6 place-items-center transition hover:text-[#e0d000]" type="button">
+            <button aria-label="Search" className="header-icon-button size-6" type="button">
               <SearchIcon />
             </button>
           </div>
@@ -280,7 +335,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
             <button
               aria-expanded={accountOpen}
               aria-label="Open account menu"
-              className={`grid size-8 place-items-center transition hover:text-[#e0d000] ${accountOpen ? 'text-[#e0d000]' : ''}`}
+              className={`header-icon-button size-8 ${accountOpen ? 'is-active' : ''}`}
               onClick={() => setAccountOpen((open) => !open)}
               type="button"
             >
@@ -288,16 +343,16 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
             </button>
             {accountMenu}
           </div>
-          <a aria-label="Cart" className="grid size-8 place-items-center transition hover:text-[#e0d000]" href="#">
+          <a aria-label="Cart" className="header-icon-button size-8" href="#">
             <BagIcon />
           </a>
-          <button aria-label="Search" className="grid size-8 place-items-center transition hover:text-[#e0d000]" type="button">
+          <button aria-label="Search" className="header-icon-button size-8" type="button">
             <SearchIcon />
           </button>
           <button
             aria-expanded={mobileOpen}
             aria-label="Open menu"
-            className="grid size-8 place-items-center transition hover:text-[#e0d000] xl:hidden"
+            className="header-icon-button size-8 xl:hidden"
             onClick={() => {
               setMobileOpen((open) => !open)
               setOpenMobileDropdown('')
@@ -317,7 +372,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
                 {item.dropdownItems ? (
                   <button
                     aria-expanded={openMobileDropdown === item.label}
-                    className={`flex min-h-12 w-full items-center justify-between rounded-lg px-3 text-left hover:bg-[#f5f5f5] hover:text-[#e0d000] ${openMobileDropdown === item.label ? 'text-[#e0d000]' : ''}`}
+                    className={`header-mobile-link ${openMobileDropdown === item.label ? 'is-active' : ''}`}
                     onClick={() => setOpenMobileDropdown((current) => (current === item.label ? '' : item.label))}
                     type="button"
                   >
@@ -325,14 +380,14 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
                     <ChevronDownIcon />
                   </button>
                 ) : (
-                  <a className="flex min-h-12 items-center justify-between rounded-lg px-3 hover:bg-[#f5f5f5] hover:text-[#e0d000]" href="#">
+                  <a className="header-mobile-link" href="#">
                     <span>{item.label}</span>
                   </a>
                 )}
                 {item.dropdownItems && openMobileDropdown === item.label ? (
                   <div className="grid gap-1 border-l border-black/10 pl-3 text-left text-[15px] font-medium text-[#666666]">
                     {item.dropdownItems.map((dropdownItem) => (
-                      <a className="rounded-lg px-3 py-2 text-left hover:bg-[#f5f5f5] hover:text-[#e0d000]" href="#" key={dropdownItem}>
+                      <a className="header-dropdown-link text-[15px]" href="#" key={dropdownItem}>
                         {dropdownItem}
                       </a>
                     ))}
@@ -349,7 +404,7 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
 
 function Hero({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void }) {
   return (
-    <section className="relative min-h-[760px] overflow-hidden bg-black px-5 pb-16 pt-[138px] text-center text-white sm:min-h-[850px] lg:min-h-[980px] lg:pb-20 lg:pt-[150px]">
+    <section className="relative min-h-[760px] overflow-hidden bg-black px-5 pb-16 pt-[138px] text-center text-white sm:min-h-[850px] lg:min-h-[1080px] lg:pb-20 lg:pt-[150px]">
       <Header onOpenAuth={onOpenAuth} />
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.22),transparent_32%),radial-gradient(circle_at_10%_30%,rgba(255,240,0,0.12),transparent_24%),linear-gradient(180deg,#050505_0%,#000_70%)]" />
@@ -382,54 +437,42 @@ function Hero({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void }) {
   )
 }
 
-function SectionHeading({
-  before,
-  highlight,
-  after,
-  copy,
-  align = 'center',
-}: {
-  before: string
-  highlight?: string
-  after?: string
-  copy: string
-  align?: 'center' | 'left'
-}) {
-  return (
-    <div className={align === 'center' ? 'mx-auto max-w-[1162px] text-center' : 'max-w-[864px] text-left'}>
-      <h2 className="font-display text-[44px] uppercase leading-none text-[#4c4c4c] sm:text-[64px] lg:text-[80px]">
-        {before}
-        {highlight ? <span className="text-[#e0d000]"> {highlight}</span> : null}
-        {after ? ` ${after}` : null}
-      </h2>
-      <p className={`mt-[15px] text-[18px] font-medium leading-[1.3] text-[#747474] sm:text-[20px] ${align === 'center' ? 'mx-auto max-w-[1162px]' : ''}`}>
-        {copy}
-      </p>
-    </div>
-  )
-}
-
 function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="rounded-[20px] bg-white p-6 text-left shadow-[0_0_0_1px_#dfdfdf,0_20px_55px_rgba(0,0,0,0.08)]">
-      <div className="relative grid h-[342px] place-items-center overflow-hidden rounded-[12px] bg-[#f8f8f8]">
-        <div className="absolute h-[328px] w-[244px] rounded-full opacity-35 blur-sm" style={{ backgroundColor: product.accent }} />
-        <img alt={product.name} className={`relative z-10 h-auto w-auto object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.18)] ${product.imageClass}`} src={asset(product.image)} />
+    <article className="flex min-h-[663px] flex-col gap-[29px] overflow-hidden rounded-[25px] bg-white p-6 text-left shadow-[0_4px_10px_rgba(0,0,0,0.1)]">
+      <div className="relative h-[342px] shrink-0 overflow-hidden rounded-[10px] bg-[#11110f]">
+        <div
+          className="absolute left-1/2 top-0 h-[328px] w-[244px] -translate-x-1/2 rounded-full opacity-75 blur-[42px]"
+          style={{ background: `radial-gradient(circle, ${product.accent} 0%, rgba(17,17,15,0) 68%)` }}
+        />
+        <img
+          alt={product.name}
+          className={`absolute left-1/2 top-6 z-10 w-auto -translate-x-1/2 object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.32)] ${product.imageClass}`}
+          src={asset(product.image)}
+        />
+        <img
+          alt=""
+          aria-hidden="true"
+          className={`product-card-reflection absolute left-1/2 top-[278px] w-auto -translate-x-1/2 -scale-y-100 object-contain opacity-35 ${product.imageClass}`}
+          src={asset(product.image)}
+        />
         <button
           aria-label={`Add ${product.name} to cart`}
-          className="absolute bottom-[34px] right-[34px] grid size-[50px] place-items-center rounded-full bg-[#fff000] transition hover:bg-black"
+          className="absolute bottom-2.5 right-2.5 z-20 grid size-[50px] place-items-center rounded-br-[10px] rounded-tl-[10px] border border-[#b9b9b9] bg-white transition hover:border-[#fff000] hover:bg-[#fff000]"
           type="button"
         >
           <img alt="" className="size-6" src={asset('icon-cart.svg')} />
         </button>
       </div>
-      <p className="mt-[29px] inline-flex h-9 items-center rounded-full bg-[#f2f2f2] px-[15px] text-[20px] font-semibold text-[#4c4c4c]">
+      <p className="inline-flex h-9 w-fit items-center rounded-full px-[15px] text-[20px] font-medium" style={{ backgroundColor: product.badgeBg, color: product.badgeColor }}>
         {product.badge}
       </p>
-      <h3 className="mt-[29px] font-display text-[40px] uppercase leading-none text-[#4c4c4c]">{product.name}</h3>
-      <p className="mt-2 text-[20px] font-medium leading-[1.3] text-[#747474]">{product.description}</p>
-      <div className="mt-[29px] flex items-center justify-between gap-4">
-        <p className="text-[30px] font-bold text-[#4c4c4c]">{product.price}</p>
+      <div className="w-[327px] max-w-full">
+        <h3 className="font-display text-[40px] uppercase leading-none text-[#4c4c4c]">{product.name}</h3>
+        <p className="text-[20px] font-medium leading-[1.3] text-[#747474]">{product.description}</p>
+      </div>
+      <div className="mt-auto flex items-center justify-between gap-4">
+        <p className="font-display text-[30px] uppercase leading-normal text-[#4c4c4c]">{product.price}</p>
         <CtaButton>shop now</CtaButton>
       </div>
     </article>
@@ -438,17 +481,19 @@ function ProductCard({ product }: { product: Product }) {
 
 function Products() {
   return (
-    <section className="bg-white px-5 py-[120px]" id="products">
-      <SectionHeading
-        after="for Every Need"
-        before="Explore Our Range Of"
-        copy="Boost your energy and focus with 5-hour ENERGY shots, crafted for fast results. Choose from a variety of strengths and flavors to fuel your day without the crash."
-        highlight="Energy-Boosting Shots"
-      />
-      <div className="mt-[30px] text-center">
+    <section className="relative z-10 h-auto overflow-visible bg-black px-5 pb-16 pt-[120px] lg:h-[875px] lg:pb-0" id="products">
+      <div className="mx-auto flex max-w-[1162px] flex-col items-center gap-[15px] text-center">
+        <h2 className="font-display text-[44px] uppercase leading-[1.2] text-white sm:text-[64px] lg:text-[80px]">
+          Explore Our Range Of <span className="text-[#fff000]">Energy-Boosting Shots</span> For Every Need
+        </h2>
+        <p className="text-[18px] font-medium leading-[1.3] text-[#b3b3b3] sm:text-[20px]">
+          Boost your energy and focus with 5-hour ENERGY shots, crafted for fast results. Choose from a variety of strengths and flavors to fuel your day without the crash.
+        </p>
+      </div>
+      <div className="mt-[30px] text-center lg:mt-[30px]">
         <CtaButton>view all products</CtaButton>
       </div>
-      <div className="mx-auto mt-[50px] grid max-w-[1760px] gap-8 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mx-auto mt-[50px] grid max-w-[1760px] gap-8 md:grid-cols-2 xl:grid-cols-4 lg:absolute lg:left-1/2 lg:top-[509px] lg:mt-0 lg:w-[calc(100%-160px)] lg:-translate-x-1/2 2xl:w-[1760px]">
         {products.map((product) => (
           <ProductCard key={product.name} product={product} />
         ))}
@@ -457,17 +502,77 @@ function Products() {
   )
 }
 
-function Ticker() {
-  const items = ['power', 'energy', 'focus', 'speed']
+const tickerMarks: TickerMark[] = [
+  { label: 'power', icon: 'bolt' },
+  { label: 'energy', icon: 'flame', outline: true },
+  { label: 'focus', icon: 'target' },
+  { label: 'speed', icon: 'gauge', outline: true },
+]
+
+function TickerIcon({ icon }: { icon: TickerIconName }) {
+  if (icon === 'bolt') {
+    return (
+      <svg aria-hidden="true" className="ticker-icon ticker-icon-bolt" viewBox="0 0 52 76">
+        <path d="M50.4 0 17.8 35.8h20.6L1.6 76l10.9-39.2H0L50.4 0Z" fill="#ffc61a" />
+      </svg>
+    )
+  }
+
+  if (icon === 'flame') {
+    return (
+      <svg aria-hidden="true" className="ticker-icon ticker-icon-flame" viewBox="0 0 64 76">
+        <path
+          d="M33.7 74.1c16.4-5.6 25.5-15.4 25.5-29.2 0-9.2-5.1-17.3-14.4-24.9-1.1 9-4.8 13.8-10.7 17.4C36.4 23.3 31.2 11.5 18.5 0c1.7 14.7-4.1 23.1-10.3 31.1C2.8 38.1.6 44.1.6 51.4c0 12.6 9 20.9 22.4 22.9-4.2-3.7-6.1-8.1-5.4-13.2.7-5.5 4.3-10.2 11-14.4-.1 8.6 2.6 14 8.1 16.1 1.7-5 4.1-8.6 7.2-10.9.1 9.3-3.4 16.7-10.2 22.2Z"
+          fill="#f28a23"
+        />
+      </svg>
+    )
+  }
+
+  if (icon === 'target') {
+    return (
+      <svg aria-hidden="true" className="ticker-icon ticker-icon-target" viewBox="0 0 82 82">
+        <path
+          d="M28 2H8a6 6 0 0 0-6 6v20M54 2h20a6 6 0 0 1 6 6v20M80 54v20a6 6 0 0 1-6 6H54M28 80H8a6 6 0 0 1-6-6V54"
+          fill="none"
+          stroke="#ff4a58"
+          strokeLinecap="round"
+          strokeWidth="3"
+        />
+        <path d="M41 18v13M41 51v13M18 41h13M51 41h13" fill="none" stroke="#ff4a58" strokeLinecap="round" strokeWidth="4" />
+        <circle cx="41" cy="41" fill="none" r="19" stroke="#ff4a58" strokeWidth="5" />
+        <circle cx="41" cy="41" fill="#ff4a58" r="6" />
+      </svg>
+    )
+  }
 
   return (
-    <section aria-label="Energy benefits" className="overflow-hidden bg-white py-[60px]">
-      <div className="flex w-max animate-[energyTicker_24s_linear_infinite] items-center gap-[90px] whitespace-nowrap">
-        {[...items, ...items, ...items].map((item, index) => (
-          <span className="font-display text-[74px] uppercase leading-none text-[#464646] sm:text-[97px]" key={`${item}-${index}`}>
-            {item}
-            <span className="ml-5 text-[#fff000]">*</span>
-          </span>
+    <svg aria-hidden="true" className="ticker-icon ticker-icon-gauge" viewBox="0 0 96 64">
+      <path d="M14 53a38 38 0 0 1 68 0" fill="none" stroke="#4c4c4c" strokeLinecap="round" strokeWidth="8" />
+      <path d="M18 53a34 34 0 0 1 16-28" fill="none" stroke="#eb3f31" strokeLinecap="round" strokeWidth="8" />
+      <path d="M34 25a34 34 0 0 1 30-2" fill="none" stroke="#ffc61a" strokeLinecap="round" strokeWidth="8" />
+      <path d="M64 23a34 34 0 0 1 14 30" fill="none" stroke="#179d61" strokeLinecap="round" strokeWidth="8" />
+      <path d="M48 49 73 26" fill="none" stroke="#4c4c4c" strokeLinecap="round" strokeWidth="6" />
+      <circle cx="48" cy="52" fill="#4c4c4c" r="6" />
+    </svg>
+  )
+}
+
+function TickerItem({ index, mark }: { index: number; mark: TickerMark }) {
+  return (
+    <div className="ticker-item" key={`${mark.label}-${index}`}>
+      <span className={mark.outline ? 'ticker-word ticker-word-outline' : 'ticker-word'}>{mark.label}</span>
+      <TickerIcon icon={mark.icon} />
+    </div>
+  )
+}
+
+function Ticker() {
+  return (
+    <section aria-label="Energy benefits" className="relative z-0 overflow-hidden bg-white pb-[70px] pt-[150px] lg:pt-[430px]">
+      <div className="ticker-track">
+        {[...tickerMarks, ...tickerMarks, ...tickerMarks].map((mark, index) => (
+          <TickerItem index={index} key={`${mark.label}-${index}`} mark={mark} />
         ))}
       </div>
     </section>
@@ -475,21 +580,70 @@ function Ticker() {
 }
 
 function FeaturedBottle() {
+  const [activeStep, setActiveStep] = useState(0)
+  const stepTrackRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const stepTrack = stepTrackRef.current
+    if (!stepTrack) return undefined
+
+    const stepElements = Array.from(stepTrack.querySelectorAll<HTMLElement>('[data-feature-step]'))
+    if (!stepElements.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleStep = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (!visibleStep) return
+
+        const stepIndex = Number(visibleStep.target.getAttribute('data-feature-step'))
+        if (!Number.isNaN(stepIndex)) {
+          setActiveStep(stepIndex)
+        }
+      },
+      {
+        threshold: [0.35, 0.6, 0.8],
+        rootMargin: '-15% 0px -20% 0px',
+      },
+    )
+
+    stepElements.forEach((stepElement) => observer.observe(stepElement))
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section className="relative grid min-h-[880px] place-items-center overflow-hidden bg-white px-5 py-24 text-center">
-      <div className="absolute top-[12%] size-[438px] rounded-full border border-[#e0d000]" />
-      <div className="absolute top-[12%] max-w-[480px] text-center">
-        <SectionHeading
-          before="Explore our"
-          copy="Discover our premium selection of 5-hour ENERGY shots, crafted to deliver long-lasting energy and mental clarity."
-          highlight="featured products"
+    <section className="bg-[#ffffff] px-0 py-0">
+      <div className="mx-auto max-w-[1920px] lg:hidden">
+        <img
+          alt="Featured products sequence final state"
+          className="h-auto w-full object-contain"
+          src={asset(featuredFrames[featuredFrames.length - 1].src)}
         />
       </div>
-      <img
-        alt="Featured 5-hour ENERGY regular strength bottle"
-        className="relative z-10 h-[500px] w-auto object-contain drop-shadow-[0_36px_35px_rgba(0,0,0,0.18)] sm:h-[560px]"
-        src={asset('feature-bottle.png')}
-      />
+
+      <div className="featured-frame-shell relative mx-auto hidden max-w-[1920px] lg:block">
+        <div className="featured-frame-sticky">
+          <div className="featured-frame-stage">
+            {featuredFrames.map((frame, index) => (
+              <img
+                alt={frame.alt}
+                className={`featured-frame-image ${index === activeStep ? 'is-active' : ''}`}
+                key={frame.src}
+                src={asset(frame.src)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div aria-hidden="true" className="featured-frame-step-track" ref={stepTrackRef}>
+          {featuredFrames.map((frame, index) => (
+            <div className="featured-frame-step" data-feature-step={index} key={`${frame.src}-${index}`} />
+          ))}
+        </div>
+      </div>
     </section>
   )
 }
@@ -545,36 +699,153 @@ function Promotions() {
 }
 
 function Testimonials() {
+  const [trackIndex, setTrackIndex] = useState(2)
+  const [isResettingTrack, setIsResettingTrack] = useState(false)
+  const slideItems = [
+    testimonials[testimonials.length - 2],
+    testimonials[testimonials.length - 1],
+    ...testimonials,
+    testimonials[0],
+    testimonials[1],
+  ]
+  const trackOffset = getTestimonialTrackOffset(trackIndex, slideItems.length)
+  const activeIndex = getActiveTestimonialIndex(trackIndex, testimonials.length)
+
+  useEffect(() => {
+    if (isResettingTrack) return undefined
+
+    const intervalId = window.setInterval(() => {
+      setTrackIndex((current) => current + 1)
+    }, 4500)
+
+    return () => window.clearInterval(intervalId)
+  }, [isResettingTrack])
+
+  function goToPrevious() {
+    if (isResettingTrack) return
+    setTrackIndex((current) => current - 1)
+  }
+
+  function goToNext() {
+    if (isResettingTrack) return
+    setTrackIndex((current) => current + 1)
+  }
+
+  function handleTrackTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
+    if (event.target !== event.currentTarget || event.propertyName !== 'transform') return
+
+    if (trackIndex === testimonials.length + 2) {
+      resetTrackTo(2)
+    }
+
+    if (trackIndex === 1) {
+      resetTrackTo(testimonials.length + 1)
+    }
+  }
+
+  function resetTrackTo(nextIndex: number) {
+    setIsResettingTrack(true)
+    setTrackIndex(nextIndex)
+    window.setTimeout(() => setIsResettingTrack(false), 30)
+  }
+
   return (
-    <section className="overflow-hidden bg-white px-5 py-[120px] text-center">
-      <SectionHeading
-        before="View Testimonials"
-        copy="Lorem ipsum dolor sit amet, conetur ading elit. Lorem ipsum dolor sit amet, conetur ading elit."
-        highlight="From Our Customers"
-      />
-      <div className="mx-auto mt-[60px] grid max-w-[1400px] gap-8 lg:grid-cols-[0.75fr_1.1fr_0.75fr] lg:items-center">
-        {[0, 1, 2].map((item) => (
-          <article
-            className={`rounded-[14px] bg-white px-6 py-10 shadow-[0_3px_12px_rgba(0,0,0,0.11)] ${item === 1 ? 'lg:min-h-[450px] lg:px-10 lg:py-16' : 'opacity-50 lg:min-h-[304px]'}`}
-            key={item}
-          >
-            <p className="font-display text-[86px] leading-none text-[#fff000]">"</p>
-            <p className={`${item === 1 ? 'text-[30px]' : 'text-[20px]'} mx-auto max-w-[900px] font-medium italic leading-[1.3] text-[#747474]`}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <p className="mt-8 text-[22px] text-[#4c4c4c]">Wellness Wonderland</p>
-            <p className={`${item === 1 ? 'text-[30px]' : 'text-[20px]'} font-semibold capitalize text-[#4c4c4c]`}>Anna Perkins</p>
-          </article>
-        ))}
+    <section className="overflow-hidden bg-white px-5 py-20 text-center lg:h-[975px] lg:py-0">
+      <div className="mx-auto flex max-w-[1037px] flex-col items-center gap-[15px] lg:pt-[120px]">
+        <h2 className="font-display text-[54px] uppercase leading-none text-[#4c4c4c] sm:text-[68px] lg:text-[80px]">
+          View <span className="text-[#e0d000]">Testimonials</span> From Our Customers
+        </h2>
+        <p className="text-[18px] font-medium leading-normal text-[#747474] sm:text-[20px]">
+          Lorem ipsum dolor sit amet, conetur ading elit. Lorem ipsum dolor sit amet, conetur ading elit.
+        </p>
       </div>
-      <div className="mt-[60px] flex justify-center gap-[7px]">
-        <span className="h-3 w-[67px] rounded-full bg-[#fff000]" />
-        <span className="size-3 rounded-full bg-[#e7e7e7]" />
-        <span className="size-3 rounded-full bg-[#e7e7e7]" />
-        <span className="size-3 rounded-full bg-[#e7e7e7]" />
+      <div className="testimonials-stage mx-auto mt-[60px] max-w-[1920px]">
+        <button
+          aria-label="Previous testimonial"
+          className="absolute left-5 top-1/2 z-20 hidden size-12 -translate-y-1/2 rounded-br-[24px] rounded-tl-[24px] border border-[#fff000] bg-[#fff000] text-[22px] font-bold text-black transition hover:bg-black hover:text-[#fff000] md:grid md:place-items-center"
+          onClick={goToPrevious}
+          type="button"
+        >
+          &lt;
+        </button>
+        <div
+          className="testimonials-track"
+          data-resetting={isResettingTrack}
+          onTransitionEnd={handleTrackTransitionEnd}
+          style={{
+            '--testimonial-track-offset': `${trackOffset}px`,
+          } as CSSProperties}
+        >
+          {slideItems.map((item, index) => {
+            const originalIndex = (index - 1 + testimonials.length) % testimonials.length
+            const isActive = index === trackIndex
+            const isSide = Math.abs(index - trackIndex) === 1
+
+            return (
+              <article
+                aria-hidden={!isActive}
+                className="testimonial-card"
+                data-active={isActive}
+                data-side={isSide}
+                style={{
+                  '--testimonial-card-width': `${isActive ? 1216 : 823}px`,
+                } as CSSProperties}
+                key={`${item.name}-${index}`}
+              >
+                <p className="testimonial-quote-mark">&ldquo;</p>
+                <p className="testimonial-copy">{item.quote}</p>
+                <div className="testimonial-person">
+                  <p className="testimonial-source">{item.source}</p>
+                  <p className="testimonial-name">{item.name}</p>
+                </div>
+                <span className="sr-only">Slide {originalIndex + 1}</span>
+              </article>
+            )
+          })}
+        </div>
+        <button
+          aria-label="Next testimonial"
+          className="absolute right-5 top-1/2 z-20 hidden size-12 -translate-y-1/2 rounded-br-[24px] rounded-tl-[24px] border border-[#fff000] bg-[#fff000] text-[22px] font-bold text-black transition hover:bg-black hover:text-[#fff000] md:grid md:place-items-center"
+          onClick={goToNext}
+          type="button"
+        >
+          &gt;
+        </button>
+      </div>
+      <div className="mt-[60px] flex justify-center gap-[7px] lg:mt-[60px]">
+        {testimonials.map((item, index) => (
+          <button
+            aria-label={`Show testimonial ${index + 1}`}
+            className={`h-3 rounded-full transition-all ${index === activeIndex ? 'w-[67px] bg-[#fff000]' : 'w-3 bg-[#e7e7e7] hover:bg-[#d6d6d6]'}`}
+            key={`${item.name}-${index}`}
+            onClick={() => setTrackIndex(index + 2)}
+            type="button"
+          />
+        ))}
       </div>
     </section>
   )
+}
+
+function getActiveTestimonialIndex(trackIndex: number, total: number) {
+  if (trackIndex < 2) return total - (2 - trackIndex)
+  if (trackIndex >= total + 2) return trackIndex - (total + 2)
+  return trackIndex - 2
+}
+
+function getTestimonialTrackOffset(activeTrackIndex: number, totalSlides: number) {
+  const sideWidth = 823
+  const activeWidth = 1216
+  const gap = 16
+  let offset = 0
+
+  for (let index = 0; index < activeTrackIndex; index += 1) {
+    offset += (index === activeTrackIndex ? activeWidth : sideWidth) + gap
+  }
+
+  const activeCenter = offset + activeWidth / 2
+  const totalWidth = (totalSlides - 1) * (sideWidth + gap) + activeWidth
+  return Math.min(Math.max(activeCenter, activeWidth / 2), totalWidth - activeWidth / 2)
 }
 
 function Faq() {
