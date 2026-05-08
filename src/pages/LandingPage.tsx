@@ -648,50 +648,57 @@ function FeaturedBottle() {
   )
 }
 
-function PromoCard({
-  title,
-  highlight,
-  image,
-  children,
-}: {
-  title: string
-  highlight?: string
-  image?: string
-  children?: import('react').ReactNode
-}) {
-  return (
-    <article className="relative min-h-[355px] overflow-hidden rounded-[20px] bg-[#969eb1] p-[30px] text-left">
-      {image ? <img alt="" className="absolute inset-0 size-full object-cover" src={asset(image)} /> : null}
-      <h3 className="relative z-10 font-display text-[44px] uppercase leading-none text-white sm:text-[60px]">
-        {title}
-        {highlight ? <span className="text-[#e0d000]"> {highlight}</span> : null}
-      </h3>
-      <CtaButton className="relative z-10 mt-5">build now</CtaButton>
-      {children}
-    </article>
-  )
-}
-
 function Promotions() {
+  const marqueeItems = [...tickerMarks, ...tickerMarks, ...tickerMarks]
+
   return (
     <section className="bg-white px-5 py-[120px]">
-      <div className="mx-auto grid max-w-[1720px] gap-8 lg:grid-cols-2">
-        <PromoCard image="bundle.png" title="Build a Bundle" />
+      <div className="mx-auto grid max-w-[1760px] gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <article className="promo-figma-card promo-figma-card-left">
+          <img alt="" aria-hidden="true" className="promo-bundle-bg" src={asset('promo-bundle-bg.png')} />
+          <img alt="5-hour ENERGY bundle packs" className="promo-bundle-packs" src={asset('promo-bundle-packs.png')} />
+          <div className="promo-figma-overlay promo-figma-overlay-bundle" />
+          <div className="promo-figma-content">
+            <h3 className="promo-figma-title">
+              Build A <span>Bundle</span>
+            </h3>
+            <CtaButton className="promo-figma-button">Build Now</CtaButton>
+          </div>
+        </article>
+
         <div className="grid gap-8">
-          <PromoCard highlight="merch" title="See our">
-            <div className="absolute bottom-[-20px] right-[-12px] flex items-end">
-              <img alt="5-hour ENERGY shirt" className="h-[260px] object-contain sm:h-[300px]" src={asset('merch-shirt.png')} />
-              <img alt="5-hour ENERGY hoodie" className="-ml-16 h-[260px] object-contain sm:h-[300px]" src={asset('merch-hoodie.png')} />
-              <img alt="5-hour ENERGY cap" className="-ml-14 h-[220px] object-contain sm:h-[260px]" src={asset('merch-cap.png')} />
+          <article className="promo-figma-card promo-figma-card-top">
+            <img alt="5-hour ENERGY merch products" className="promo-merch-products" src={asset('promo-merch-products.png')} />
+            <div className="promo-figma-content">
+              <h3 className="promo-figma-title">
+                See Our <span>Merch</span>
+              </h3>
+              <CtaButton className="promo-figma-button">View All</CtaButton>
             </div>
-          </PromoCard>
-          <PromoCard title="Revitalize your day, nourish yourself">
-            <div className="absolute bottom-[-28px] left-8 right-8 flex justify-center">
-              {products.map((product) => (
-                <img alt="" className="-mx-2 h-[210px] w-auto object-contain sm:h-[240px]" key={product.image} src={asset(product.image)} />
-              ))}
+          </article>
+
+          <article className="promo-figma-card promo-figma-card-bottom">
+            <img alt="Revitalize and nourish card visual" className="promo-figma-image" src={asset('promo-revitalize-figma.png')} />
+            <div className="promo-figma-overlay promo-figma-overlay-bottom-top" />
+            <div className="promo-figma-content promo-figma-content-bottom">
+              <h3 className="promo-figma-title promo-figma-title-bottom">
+                Revitalize Your Day, <span>Nourish Yourself</span>
+              </h3>
             </div>
-          </PromoCard>
+            <div className="promo-figma-strip-mask" aria-hidden="true" />
+            <div className="promo-figma-marquee" aria-hidden="true">
+              <div className="promo-figma-marquee-track">
+                {marqueeItems.map((item, index) => (
+                  <div className="promo-figma-marquee-item" key={`${item.label}-${index}`}>
+                    <span className={item.outline ? 'promo-figma-marquee-word promo-figma-marquee-word-outline' : 'promo-figma-marquee-word'}>
+                      {item.label}
+                    </span>
+                    <TickerIcon icon={item.icon} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>

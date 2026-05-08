@@ -353,6 +353,397 @@ h3 {
   height: 100vh;
 }
 
+.promo-figma-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgb(0 0 0 / 6%);
+}
+
+.promo-figma-card-left {
+  min-height: 742px;
+  background: #06121f;
+}
+
+.promo-figma-card-top {
+  min-height: 355px;
+  background: #9ea5ba;
+}
+
+.promo-figma-card-bottom {
+  min-height: 356px;
+}
+
+.promo-figma-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promo-bundle-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promo-bundle-packs {
+  position: absolute;
+  right: 20px;
+  bottom: 14px;
+  z-index: 2;
+  width: min(76%, 680px);
+  height: auto;
+  object-fit: contain;
+}
+
+.promo-merch-products {
+  position: absolute;
+  right: 18px;
+  bottom: 0;
+  z-index: 2;
+  width: min(62%, 515px);
+  height: auto;
+  object-fit: contain;
+}
+
+.promo-figma-overlay {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.promo-figma-overlay-bundle {
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  height: 190px;
+  background: transparent;
+}
+
+.promo-figma-overlay-bottom-top {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 120px;
+  background: #000000;
+}
+
+.promo-figma-content {
+  position: absolute;
+  left: 30px;
+  top: 30px;
+  z-index: 6;
+  max-width: calc(100% - 60px);
+}
+
+.promo-figma-content-bottom {
+  top: 26px;
+}
+
+.promo-figma-title {
+  margin: 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(3rem, 2.8vw, 5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.promo-figma-title span {
+  color: #e0d000;
+}
+
+.promo-figma-title-bottom {
+  font-size: clamp(3rem, 2.45vw, 4.2rem);
+}
+
+.promo-figma-button {
+  margin-top: 20px;
+  min-width: 146px;
+}
+
+.promo-figma-strip-mask {
+  position: absolute;
+  left: -86px;
+  right: -86px;
+  bottom: 9px;
+  z-index: 4;
+  height: 70px;
+  background: #000000;
+  transform: rotate(-8deg);
+}
+
+.promo-figma-marquee {
+  position: absolute;
+  left: -86px;
+  right: -86px;
+  bottom: 9px;
+  z-index: 5;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #ffffff;
+  transform: rotate(-8deg);
+}
+
+.promo-figma-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 56px;
+  white-space: nowrap;
+  animation: promoMarquee 20s linear infinite;
+  padding-inline: 72px;
+}
+
+.promo-figma-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.promo-figma-marquee-word {
+  color: #4c4c4c;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 58px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.promo-figma-marquee-word-outline {
+  color: #ffffff;
+  text-shadow:
+    1px 0 #4c4c4c,
+    -1px 0 #4c4c4c,
+    0 1px #4c4c4c,
+    0 -1px #4c4c4c;
+  -webkit-text-stroke: 1.2px #4c4c4c;
+}
+
+.promo-figma-marquee .ticker-icon-bolt {
+  width: 28px;
+  height: 38px;
+}
+
+.promo-figma-marquee .ticker-icon-flame {
+  width: 30px;
+  height: 40px;
+}
+
+.promo-figma-marquee .ticker-icon-target {
+  width: 40px;
+  height: 40px;
+}
+
+.promo-figma-marquee .ticker-icon-gauge {
+  width: 44px;
+  height: 30px;
+}
+
+@keyframes promoMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+@media (max-width: 1279px) {
+  .promo-figma-card-left {
+    min-height: 620px;
+  }
+
+  .promo-bundle-packs {
+    right: 8px;
+    bottom: 18px;
+    width: min(82%, 610px);
+  }
+
+  .promo-figma-card-top {
+    min-height: 316px;
+  }
+
+  .promo-merch-products {
+    right: 0;
+    width: min(64%, 470px);
+  }
+
+  .promo-figma-card-bottom {
+    min-height: 316px;
+  }
+
+  .promo-figma-title-bottom {
+    font-size: clamp(2.4rem, 2.4vw, 3.4rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  .promo-figma-card-left {
+    min-height: 520px;
+  }
+
+  .promo-bundle-packs {
+    right: -22px;
+    bottom: 20px;
+    width: min(92%, 560px);
+  }
+
+  .promo-figma-card-top {
+    min-height: 298px;
+  }
+
+  .promo-merch-products {
+    right: -12px;
+    width: min(68%, 410px);
+  }
+
+  .promo-figma-card-bottom {
+    min-height: 330px;
+  }
+
+  .promo-figma-content {
+    left: 22px;
+    top: 22px;
+    max-width: calc(100% - 44px);
+  }
+
+  .promo-figma-content-bottom {
+    top: 18px;
+  }
+
+  .promo-figma-title-bottom {
+    font-size: clamp(2rem, 2.8vw, 3rem);
+  }
+
+  .promo-figma-strip-mask {
+    left: -62px;
+    right: -62px;
+    height: 62px;
+    transform: rotate(-6.2deg);
+  }
+
+  .promo-figma-marquee {
+    left: -62px;
+    right: -62px;
+    height: 62px;
+    transform: rotate(-6.2deg);
+  }
+
+  .promo-figma-marquee-track {
+    gap: 40px;
+  }
+
+  .promo-figma-marquee-word {
+    font-size: 44px;
+  }
+
+  .promo-figma-marquee .ticker-icon-bolt {
+    width: 23px;
+    height: 31px;
+  }
+
+  .promo-figma-marquee .ticker-icon-flame {
+    width: 24px;
+    height: 31px;
+  }
+
+  .promo-figma-marquee .ticker-icon-target {
+    width: 32px;
+    height: 32px;
+  }
+
+  .promo-figma-marquee .ticker-icon-gauge {
+    width: 35px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .promo-figma-card-left {
+    min-height: 430px;
+  }
+
+  .promo-bundle-packs {
+    right: -34px;
+    bottom: 16px;
+    width: min(104%, 520px);
+  }
+
+  .promo-figma-card-top {
+    min-height: 230px;
+  }
+
+  .promo-merch-products {
+    right: -22px;
+    width: min(72%, 315px);
+  }
+
+  .promo-figma-card-bottom {
+    min-height: 260px;
+  }
+
+  .promo-figma-overlay-bundle {
+    height: 148px;
+  }
+
+  .promo-figma-overlay-bottom-top {
+    height: 94px;
+  }
+
+  .promo-figma-content {
+    left: 16px;
+    top: 16px;
+    max-width: calc(100% - 32px);
+  }
+
+  .promo-figma-content-bottom {
+    top: 14px;
+  }
+
+  .promo-figma-title {
+    font-size: clamp(2.1rem, 8.4vw, 3rem);
+  }
+
+  .promo-figma-title-bottom {
+    font-size: clamp(1.75rem, 6.6vw, 2.5rem);
+  }
+
+  .promo-figma-button {
+    margin-top: 14px;
+    min-width: 132px;
+  }
+
+  .promo-figma-strip-mask {
+    left: -74px;
+    right: -74px;
+    height: 54px;
+    bottom: 6px;
+    transform: rotate(-7deg);
+  }
+
+  .promo-figma-marquee {
+    left: -74px;
+    right: -74px;
+    height: 54px;
+    bottom: 6px;
+    transform: rotate(-7deg);
+  }
+
+  .promo-figma-marquee-track {
+    gap: 28px;
+  }
+
+  .promo-figma-marquee-word {
+    font-size: 34px;
+  }
+}
+
 .testimonials-stage {
   position: relative;
   height: 466px;
