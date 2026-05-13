@@ -4,16 +4,19 @@ import { testimonials } from './homeData'
 import { ArrowLeftIcon, ArrowRightIcon } from './icons'
 import type { Testimonial } from './types'
 
+const INACTIVE_CARD_WIDTH = 823
+const ACTIVE_CARD_WIDTH = 1216
+const CARD_GAP = 16
+
 export function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const previousIndex = getPreviousIndex(activeIndex)
-  const nextIndex = getNextIndex(activeIndex)
+  const activeCardCenter = activeIndex * (INACTIVE_CARD_WIDTH + CARD_GAP) + ACTIVE_CARD_WIDTH / 2
 
   useEffect(() => {
-    const intervalId = window.setInterval(showNext, 4500)
+    const intervalId = window.setInterval(() => setActiveIndex(getNextIndex), 4500)
     return () => window.clearInterval(intervalId)
-  }, [activeIndex])
+  }, [])
 
   function showPrevious() {
     setActiveIndex(getPreviousIndex)
@@ -44,10 +47,17 @@ export function TestimonialsSection() {
           <ArrowLeftIcon />
         </button>
 
-        <div className="testimonials-track">
-          <TestimonialCard active={false} testimonial={testimonials[previousIndex]} />
-          <TestimonialCard active testimonial={testimonials[activeIndex]} />
-          <TestimonialCard active={false} testimonial={testimonials[nextIndex]} />
+        <div
+          className="testimonials-track"
+          style={{ '--testimonial-active-center': `${activeCardCenter}px` } as CSSProperties}
+        >
+          {testimonials.map((testimonial, index) => (
+            <TestimonialCard
+              active={index === activeIndex}
+              key={`${testimonial.name}-${index}`}
+              testimonial={testimonial}
+            />
+          ))}
         </div>
 
         <button
