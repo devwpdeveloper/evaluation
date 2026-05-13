@@ -26,6 +26,9 @@ export function Header({ onOpenAuth }: { onOpenAuth: (mode: AuthMode) => void })
           <Link className="header-dropdown-link" to="/dashboard">
             Dashboard
           </Link>
+          <Link className="header-dropdown-link" to="/users">
+            Users
+          </Link>
           <button className="header-dropdown-link w-full" onClick={logout} type="button">
             Logout
           </button>

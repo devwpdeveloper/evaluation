@@ -59,7 +59,7 @@ npm run lint
 
 - Responsive landing page with Navbar, Hero, Features, and Footer.
 - Firebase signup, login, logout, validation, and protected routes.
-- Users module using `https://dummyjson.com/users` with loading, errors, search, sorting, pagination, and dynamic user details pages.
+- Users module using `https://dummyjson.com/users` with loading, errors, search, sorting, pagination, and user details in a popup.
 - Tasks dashboard with create, read, update, delete, search, sorting, timestamps, delete confirmation, and per-user localStorage keys.
 
 ## Notes
